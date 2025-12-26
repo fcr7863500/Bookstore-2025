@@ -21,7 +21,8 @@ public:
     //用于判断ID是否合规的函数
     static bool isValidUserID(const std::string& str)
     {
-        if (str.empty() || str.size() > 30) return false;
+        if (str.empty())  return true;
+        if (str.size() > 30) return false;
         for (char c : str)
         {
             if (!isalnum(c) && c != '_') return false;

@@ -64,7 +64,7 @@ private:
         int pre_offset;
         int offset;
         int num;
-        static const int MAX_NUM = 500;
+        static const int MAX_NUM = 640;
         KVmap data[MAX_NUM + 1];
 
     public:
