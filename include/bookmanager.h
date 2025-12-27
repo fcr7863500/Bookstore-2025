@@ -119,5 +119,6 @@ public:
     bool import(int quantity,double total_cost);
     std::vector<TradeRecord> showFinance(int count = 2147483647);
     std::vector<TradeRecord> showAll();
+    std::string getSelectBook();
 };
 #endif //BOOKSTORE_2025_BOOKMANAGER_H

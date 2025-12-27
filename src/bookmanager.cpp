@@ -333,3 +333,7 @@ std::vector<TradeRecord> BookManager::showAll()
     std::sort(all_trades.begin(),all_trades.end());
     return all_trades;
 }
+std::string BookManager::getSelectBook()
+{
+    return selected_book.toString();
+}
