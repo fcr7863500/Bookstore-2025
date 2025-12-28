@@ -223,7 +223,8 @@ bool BookManager::modify(const std::map<const std::string,std::string>& target)
         return false;
     }
     BookInfo book = target_books[0];
-    BookInfo tmp_book = book;
+    BookInfo tmp_book;
+    tmp_book.isbn = book.isbn;tmp_book.name = name;tmp_book.key_words = book.Key_words;tmp_book.price = book.price;tmp_book.quantity = book.quantity;tmp_book.author = book.author;
     book_storage.erase(isbn_key,book);
     for (auto &item : target)
     {
@@ -237,8 +238,8 @@ bool BookManager::modify(const std::map<const std::string,std::string>& target)
                 book_storage.insert(isbn_key,book);
                 return false;
             }
-            for(auto book : all_books){
-                if(value == book.isbn.toString()){
+            for(auto bookss : all_books){
+                if(value == bookss.isbn.toString()){
                      Tool::printInvalid();
                 book_storage.insert(isbn_key,book);
                 return false;
