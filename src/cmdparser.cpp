@@ -33,7 +33,7 @@ bool CommandParser::parseSu(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(user_id,"su",user_id);
-        book_manager.setCurOperator(user_id,user_manager.getUserPrivilege());
+        book_manager.setCurOperator(user_manager.getCurUser());
     }
     return result;
 }
@@ -49,7 +49,7 @@ bool CommandParser::parseLogout(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(cur_user,"logout",cur_user);
-        book_manager.setCurOperator(user_manager.getCurUser(),user_manager.getUserPrivilege());
+        book_manager.setCurOperator(user_manager.getCurUser());
     }
     return result;
 }

@@ -188,8 +188,12 @@ bool BookManager::select(const std::string& isbn)
 //修改图书信息的函数实现
 bool BookManager::modify(const std::map<const std::string,std::string>& target)
 {
-    if (cur_privilege < 3 || selected_book.isEmpty() || target.empty())
+    if (selected_book.isEmpty() || target.empty())
     {
+        Tool::printInvalid();
+        return false;
+    }
+    if(cur_privilege < 3){
         Tool::printInvalid();
         return false;
     }
@@ -331,7 +335,7 @@ std::vector<TradeRecord> BookManager::showFinance(int count)
 {
     std::vector<TradeRecord> all_trades = trade_storage.getAll();
     std::sort(all_trades.begin(),all_trades.end());
-    if (count == 2147483647 || count >= all_trades.size())
+    if (count == -1 || count >= all_trades.size())
     {
         return all_trades;
     }

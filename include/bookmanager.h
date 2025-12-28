@@ -107,10 +107,11 @@ public:
     {
         initTradeCounter();
     }
-    void setCurOperator(const std::string& id,int priv)
+    void setCurOperator(user_stack now_user)
     {
-        cur_privilege = priv;
-        cur_operator = MakeArray(id);
+        cur_privilege = now_user.privilege;
+        cur_operator = MakeArray(now_user.userid);
+        selected_book = MakeArray(now_user.selected_book);
     }
     bool show(const std::string& type,const std::string& val);
     bool buy(const std::string& isbn,int quantity);

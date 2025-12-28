@@ -92,7 +92,8 @@ bool UserManager::su(const std::string& id,const std::string& password)
                 return false;
             }
         }
-        login_stack.push(uid);
+        user_stack now_user{uid,user.privilege,""};
+        login_stack.push(now_user);
         cur_user = uid;
         cur_privilege = user.privilege;
         user.is_logged = true;
@@ -106,7 +107,8 @@ bool UserManager::su(const std::string& id,const std::string& password)
         Tool::printInvalid();
         return false;
     }
-    login_stack.push(uid);
+    user_stack now_user{uid,user.privilege,""};
+        login_stack.push(now_user);
     cur_user = uid;
     cur_privilege = user.privilege;
     user.is_logged = true;
@@ -126,7 +128,7 @@ bool UserManager::logout()
         Tool::printInvalid();
         return false;
     }
-    MakeArray uid(login_stack.top());
+    MakeArray uid(login_stack.top().userid);
     login_stack.pop();
     std::vector<UserInfo> infos = user_storage.find(uid);
     if (infos.empty())
@@ -148,8 +150,8 @@ bool UserManager::logout()
     }
     else
     {
-        cur_user = login_stack.top();
-        std::vector<UserInfo> cur_infos = user_storage.find(login_stack.top());
+        cur_user = login_stack.top().userid;
+        std::vector<UserInfo> cur_infos = user_storage.find(login_stack.top().userid);
         if (!cur_infos.empty())
         {
             cur_privilege = cur_infos[0].privilege;
@@ -289,14 +291,6 @@ bool UserManager::deleteUser(const std::string& id)
     }
     user_storage.erase(uid,user);
     return true;
-}
-int UserManager::getUserPrivilege() const
-{
-    return cur_privilege;
-}
-std::string UserManager::getCurUser() const
-{
-    return cur_user.toString();
 }
 bool UserManager::isLoggedIn(const std::string& id)
 {
