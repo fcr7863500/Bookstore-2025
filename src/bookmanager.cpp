@@ -181,10 +181,13 @@ bool BookManager::select(const std::string& isbn)
     if (target_books.empty())
     {
         BookInfo new_book;
-        new_book.isbn = isbn; new_book.quantity = 0;new_book.price = 0.0; new_book.author = "";new_book.keywords = "";new_book.name = "";
+        new_book.isbn = isbn_key; new_book.quantity = 0;new_book.price = 0.0; new_book.author = "";new_book.keywords = "";new_book.name = "";
         book_storage.insert(isbn_key,new_book);
     }
     selected_book = isbn_key;
+    name_find.insert(MakeArray(""),isbn_key);
+    author_find.insert(MakeArray(""),isbn_key);
+    keywords_find.insert(MakeArray(""),isbn_key);
     return true;
 }
 //修改图书信息的函数实现
@@ -245,12 +248,13 @@ bool BookManager::modify(const std::map<const std::string,std::string>& target)
                 book_storage.insert(isbn_key,book);
                 return false;
             }
-            for(auto bookss : all_books){
-                if(value == bookss.isbn.toString()){
-                     Tool::printInvalid();
+            MakeArray new_isbn_key(value);
+            std::vector<BookInfo> check_dup = book_storage.find(new_isbn_key);
+            if(!check_dup.empty())
+            {
+                Tool::printInvalid();
                 book_storage.insert(isbn_key,book);
                 return false;
-                }
             }
             tmp_book.isbn = MakeArray(value);
         }

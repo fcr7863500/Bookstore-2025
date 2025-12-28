@@ -95,6 +95,7 @@ class BookManager
 {
 private:
     LinkedBlock<MakeArray,BookInfo> book_storage;
+    //三个到isbn的映射，方便show时查找
     LinkedBlock<MakeArray,MakeArray> name_find;
     LinkedBlock<MakeArray,MakeArray> author_find;
     LinkedBlock<MakeArray,MakeArray> keywords_find;

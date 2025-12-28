@@ -137,7 +137,18 @@ bool UserManager::logout()
     if (!infos.empty())
     {
         UserInfo& user = infos[0];
-        user.is_logged = false;
+        bool hasmore = false;
+        std::stack<MakeArray>tmp_stack = login_stack;
+        while (!tmp_stack.empty())
+        {
+            if (tmp_stack.top() == uid)
+            {
+                hasmore = true;
+                break;
+            }
+            tmp_stack.pop();
+        }
+        user.is_logged = hasmore;
         user_storage.erase(uid,user);
         user_storage.insert(uid,user);
     }

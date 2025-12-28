@@ -6,6 +6,7 @@
 #include<cstring>
 #include<cctype>
 #include<algorithm>
+#include<cstddef>
 //一个自定义的固定长度的特殊数组类，用于将所有的字符数组和字符串（长度不固定）统一，便于文件读写
 class MakeArray
 {

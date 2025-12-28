@@ -21,7 +21,7 @@ public:
     //用于判断ID是否合规的函数
     static bool isValidUserID(const std::string& str)
     {
-        if (str.empty())  return true;
+        if (str.empty())  return false;
         if (str.size() > 30) return false;
         for (char c : str)
         {
@@ -32,7 +32,13 @@ public:
     //用于判断密码是否合规的函数
     static bool isValidPassword(const std::string& str)
     {
-        return isValidUserID(str);
+        if (str.empty())  return true;
+        if (str.size() > 30) return false;
+        for (char c : str)
+        {
+            if (!isalnum(c) && c != '_') return false;
+        }
+        return true;
     }
     //用于判断用户名是否合规
     static bool isValidUsername(const std::string& str)
@@ -189,7 +195,7 @@ public:
     //用于去除指令中的双引号
     static std::string RemoveQuoted(const std::string& str)
     {
-        if (str.size() > 2 && str.front() == '"' && str.back() == '"')
+        if (str.size() >= 2 && str.front() == '"' && str.back() == '"')
         {
             return str.substr(1, str.size() - 2);
         }
