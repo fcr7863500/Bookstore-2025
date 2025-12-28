@@ -21,14 +21,14 @@ private:
 
         bool operator<(const KVmap &other) const
         {
-            if (index_ != other.index_)  return index_ < other.index_;
-             return value_ < other.value_;
+              return index_ < other.index_;
+
         }
 
         bool operator>(const KVmap &other) const
         {
-            if (index_ != other.index_)  return index_ > other.index_;
-             return value_ > other.value_;
+             return index_ > other.index_;
+            
         }
 
         bool operator==(const KVmap &other) const
