@@ -25,7 +25,7 @@ void LogManager::logOperation(const std::string& op_id,const std::string& op_typ
 //展示财务记录函数（必做）
 bool LogManager::Showfinance(int count)
 {
-    if (user_manager.getCurUser().privilege != 7)
+    if (user_manager.getUserPrivilege() != 7)
     {
         Tool::printInvalid();
         return false;
@@ -63,7 +63,7 @@ bool LogManager::Showfinance(int count)
 //财务报表
 bool LogManager::reportFinance()
 {
-    if (user_manager.getCurUser().privilege != 7)
+    if (user_manager.getUserPrivilege() != 7)
     {
         Tool::printInvalid();
         return false;
@@ -94,7 +94,7 @@ bool LogManager::reportFinance()
 }
 bool LogManager::reportEmployee()
 {
-    if (user_manager.getCurUser().privilege != 7)
+    if (user_manager.getUserPrivilege() != 7)
     {
         Tool::printInvalid();
         return false;
@@ -113,7 +113,7 @@ bool LogManager::reportEmployee()
 }
 bool LogManager::log()
 {
-    if (user_manager.getCurUser().privilege != 7)
+    if (user_manager.getUserPrivilege() != 7)
     {
         Tool::printInvalid();
         return false;

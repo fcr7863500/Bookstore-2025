@@ -24,24 +24,16 @@ struct UserInfo
     bool operator<=(const UserInfo& other) const;
     bool operator>=(const UserInfo& other) const;
 };
-struct user_stack
-{
-    MakeArray userid;
-    int privilege;
-    MakeArray selected_book_isbn;
-    user_stack():userid(MakeArray("")),privilege(0),selected_book_isbn(MakeArray("")){}
-    user_stack(std::string userid,int priv,std::string book) : userid(MakeArray(userid)),privilege(priv),selected_book_isbn(MakeArray(book)){}
-};
 class UserManager
 {
 private:
     LinkedBlock<MakeArray,UserInfo> user_storage;
-    std::stack<user_stack> login_stack;
+    std::stack<MakeArray> login_stack;
     MakeArray cur_user;
     int cur_privilege;
     void Initial_Root_user();
 public:
-    UserManager() : user_storage("users.dat"),cur_privilege(0),cur_user(MakeArray(""))
+    UserManager() : user_storage("users.dat"),cur_privilege(0)
     {
         // std::cerr << "construct user manager" << std::endl;
         Initial_Root_user();
@@ -53,10 +45,8 @@ public:
     bool passwd(const std::string& id,const std::string& cur_pw,const std::string& new_pw);
     bool useradd(const std::string& id,const std::string& pw,int priv,const std::string& username);
     bool deleteUser(const std::string& id);
-    user_stack& getCurUser()
-    {
-            return login_stack.top();
-    };
+    int getUserPrivilege() const;
+    std::string getCurUser() const;
     bool isLoggedIn(const std::string& id);
 };
 #endif //BOOKSTORE_2025_USERMANAGER_H

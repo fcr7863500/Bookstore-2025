@@ -2,7 +2,6 @@
 #ifndef BOOKSTORE_2025_BOOKMANAGER_H
 #define BOOKSTORE_2025_BOOKMANAGER_H
 #include"file storage.h"
-#include"usermanager.h"
 #include"makearray.h"
 #include"tool.h"
 #include<vector>
@@ -104,15 +103,14 @@ private:
     void initTradeCounter();
 
 public:
-    BookManager():book_storage("books.dat"),trade_storage("trades.dat"),cur_privilege(0),trade_id_count(0)
+    BookManager():book_storage("books.dat"),trade_storage("trades.dat"),cur_privilege(0),cur_operator(MakeArray("")),trade_id_count(0)
     {
         initTradeCounter();
     }
-    void setCurOperator(user_stack now_user)
+    void setCurOperator(const std::string& id,int priv)
     {
-        cur_privilege = now_user.privilege;
-        cur_operator = MakeArray(now_user.userid);
-        selected_book = MakeArray(now_user.selected_book_isbn);
+        cur_privilege = priv;
+        cur_operator = MakeArray(id);
     }
     bool show(const std::string& type,const std::string& val);
     bool buy(const std::string& isbn,int quantity);
