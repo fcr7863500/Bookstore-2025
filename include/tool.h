@@ -163,7 +163,7 @@ public:
         {
             end_pos--;
         }
-        return str.substr(end_pos, end_pos - begin_pos + 1);
+        return str.substr(begin_pos, end_pos - begin_pos + 1);
     }
     //用于分解命令行输入指令的函数
     static std::vector<std::string> splitCommand(const std::string& str)
