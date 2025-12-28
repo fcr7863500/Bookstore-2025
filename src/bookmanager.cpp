@@ -60,11 +60,13 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 Tool::printInvalid();
                 return false;
             }
-            for (auto &book : all_books)
+            std::vector<MakeArray> isbn_col = name_find.find(name_val);
+            for (int i = 0;i < isbn_col.size();i++)
             {
-                if (book.name == name_val)
+                std::vector<BookInfo> part = book_storage.find(isbn_col[i]);
+                for (int j = 0;j < part.size();j++)
                 {
-                    target_books.push_back(book);
+                    target_books.push_back(part[j]);
                 }
             }
         }
@@ -77,13 +79,13 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 Tool::printInvalid();
                 return false;
             }
-            for (auto &book : all_books)
+            std::vector<MakeArray> isbn_col = author_find.find(author_val);
+            for (int i = 0;i < isbn_col.size();i++)
             {
-                // std::cout << book.author << " " << book.name << " " << book.isbn << std::endl;
-                if (book.author == author_val)
+                std::vector<BookInfo> part = book_storage.find(isbn_col[i]);
+                for (int j = 0;j < part.size();j++)
                 {
-                    // std::cout << "found" << std::endl;
-                    target_books.push_back(book);
+                    target_books.push_back(part[j]);
                 }
             }
         }
@@ -101,13 +103,13 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 Tool::printInvalid();
                 return false;
             }
-            for (auto &book : all_books)
+            std::vector<MakeArray> isbn_col = keywords_find.find(keyword_val);
+            for (int i = 0;i < isbn_col.size();i++)
             {
-                std::string book_keyword = book.keywords.toString();
-                std::vector<std::string> parts = Tool::split(book_keyword, '|');
-                if (std::find(parts.begin(), parts.end(), keyword_val) != parts.end())
+                std::vector<BookInfo> part = book_storage.find(isbn_col[i]);
+                for (int j = 0;j < part.size();j++)
                 {
-                    target_books.push_back(book);
+                    target_books.push_back(part[j]);
                 }
             }
         }
@@ -300,6 +302,20 @@ bool BookManager::modify(const std::map<const std::string,std::string>& target)
             return false;
         }
     }
+    name_find.erase(book.name,book.isbn);
+    name_find.insert(tmp_book.name,tmp_book.isbn);
+    author_find.erase(book.author,book.isbn);
+    author_find.insert(tmp_book.author,tmp_book.isbn);
+    std::vector<std::string> old = Tool::split(book.keywords.toString(),'|');
+    for (int i = 0;i < old.size();++i)
+    {
+        keywords_find.erase(old[i],book.isbn);
+    }
+    std::vector<std::string> flush = Tool::split(tmp_book.keywords.toString(),'|');
+    for (int i = 0;i < flush.size();++i)
+    {
+        keywords_find.insert(flush[i],tmp_book.isbn);
+    }
     book_storage.insert(tmp_book.isbn,tmp_book);
     selected_book = tmp_book.isbn;
     return true;
@@ -331,7 +347,7 @@ std::vector<TradeRecord> BookManager::showFinance(int count)
 {
     std::vector<TradeRecord> all_trades = trade_storage.getAll();
     std::sort(all_trades.begin(),all_trades.end());
-    if (count == 2147483647 || count >= all_trades.size())
+    if (count == -1 || count >= all_trades.size())
     {
         return all_trades;
     }

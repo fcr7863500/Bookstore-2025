@@ -95,6 +95,9 @@ class BookManager
 {
 private:
     LinkedBlock<MakeArray,BookInfo> book_storage;
+    LinkedBlock<MakeArray,MakeArray> name_find;
+    LinkedBlock<MakeArray,MakeArray> author_find;
+    LinkedBlock<MakeArray,MakeArray> keywords_find;
     LinkedBlock<MakeArray,TradeRecord> trade_storage;
     MakeArray selected_book;
     MakeArray cur_operator;
@@ -103,7 +106,8 @@ private:
     void initTradeCounter();
 
 public:
-    BookManager():book_storage("books.dat"),trade_storage("trades.dat"),cur_privilege(0),cur_operator(MakeArray("")),trade_id_count(0)
+    BookManager():book_storage("books.dat"),name_find("name.data"),author_find("author.data"),keywords_find("keywords.data"),
+    trade_storage("trades.dat"),cur_privilege(0),cur_operator(MakeArray("")),trade_id_count(0)
     {
         initTradeCounter();
     }
@@ -117,7 +121,7 @@ public:
     bool select(const std::string& isbn);
     bool modify(const std::map<const std::string,std::string>& target);
     bool import(int quantity,double total_cost);
-    std::vector<TradeRecord> showFinance(int count = 2147483647);
+    std::vector<TradeRecord> showFinance(int count = -1);
     std::vector<TradeRecord> showAll();
     std::string getSelectBook();
 };
