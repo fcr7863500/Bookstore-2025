@@ -1,16 +1,13 @@
 #include"../include/usermanager.h"
 //构造userinfo
-UserInfo::UserInfo() : privilege(0),is_logged(false){}
+UserInfo::UserInfo() :password(MakeArray("")),username(MakeArray("")), privilege(0),is_logged(false){}
 
 UserInfo::UserInfo(const std::string& pw,const std::string& us,int priv):
-password(pw),username(us),privilege(priv){}
+password(MakeArray(pw)),username(MakeArray(us)),privilege(priv),is_logged(false){}
 
 bool UserInfo::operator<(const UserInfo& other) const
 {
-    if (password != other.password) return (password < other.password);
-    if (username != other.username) return (username < other.username);
-    if (privilege != other.privilege) return (privilege < other.privilege);
-    return is_logged < other.is_logged;
+    return false;
 }
 
 bool UserInfo::operator==(const UserInfo& other) const
@@ -20,10 +17,7 @@ bool UserInfo::operator==(const UserInfo& other) const
 
 bool UserInfo::operator>(const UserInfo& other) const
 {
-    if (password != other.password) return (password > other.password);
-    if (username != other.username) return (username > other.username);
-    if (privilege != other.privilege) return (privilege > other.privilege);
-    return is_logged > other.is_logged;
+    return false;
 }
 
 bool UserInfo::operator!=(const UserInfo& other) const
@@ -48,6 +42,7 @@ bool UserInfo::operator>=(const UserInfo& other) const
     if (root_info.empty())
     {
         UserInfo root{"sjtu","root",7};
+        root.is_logged = false;
         user_storage.insert(root_id,root);
         std::cerr << user_storage.find(root_id).size() << std::endl;
     }
@@ -92,11 +87,12 @@ bool UserManager::su(const std::string& id,const std::string& password)
                 return false;
             }
         }
-        login_stack.push(uid);
+        user_storage.erase(uid,user);
+        login_user new_user{id,user.privilege,""};
+        login_stack.push(new_user);
         cur_user = uid;
         cur_privilege = user.privilege;
         user.is_logged = true;
-        user_storage.erase(uid,user);
         user_storage.insert(uid,user);
         return true;
     }
@@ -106,11 +102,12 @@ bool UserManager::su(const std::string& id,const std::string& password)
         Tool::printInvalid();
         return false;
     }
-    login_stack.push(uid);
+    user_storage.erase(uid,user);
+    login_user new_user{id,user.privilege,""};
+    login_stack.push(new_user);
     cur_user = uid;
     cur_privilege = user.privilege;
     user.is_logged = true;
-    user_storage.erase(uid,user);
     user_storage.insert(uid,user);
     return true;
 }
@@ -126,7 +123,7 @@ bool UserManager::logout()
         Tool::printInvalid();
         return false;
     }
-    MakeArray uid(login_stack.top());
+    MakeArray uid = login_stack.top().userid;
     login_stack.pop();
     std::vector<UserInfo> infos = user_storage.find(uid);
     if (infos.empty())
@@ -138,18 +135,18 @@ bool UserManager::logout()
     {
         UserInfo& user = infos[0];
         bool hasmore = false;
-        std::stack<MakeArray>tmp_stack = login_stack;
+        std::stack<login_user>tmp_stack = login_stack;
         while (!tmp_stack.empty())
         {
-            if (tmp_stack.top() == uid)
+            if (tmp_stack.top().userid == uid)
             {
                 hasmore = true;
                 break;
             }
             tmp_stack.pop();
         }
-        user.is_logged = hasmore;
         user_storage.erase(uid,user);
+        user.is_logged = hasmore;
         user_storage.insert(uid,user);
     }
     if (login_stack.empty())
@@ -159,12 +156,8 @@ bool UserManager::logout()
     }
     else
     {
-        cur_user = login_stack.top();
-        std::vector<UserInfo> cur_infos = user_storage.find(login_stack.top());
-        if (!cur_infos.empty())
-        {
-            cur_privilege = cur_infos[0].privilege;
-        }
+        cur_user = login_stack.top().userid;
+        cur_privilege = login_stack.top().privilege;
     }
     return true;
 }
@@ -235,8 +228,8 @@ bool UserManager::passwd(const std::string& id,const std::string& cur_password,c
             return false;
         }
     }
-    user.password = MakeArray(new_password);
     user_storage.erase(uid,user);
+    user.password = MakeArray(new_password);
     user_storage.insert(uid,user);
     return true;
 }
@@ -309,6 +302,14 @@ std::string UserManager::getCurUser() const
 {
     return cur_user.toString();
 }
+login_user UserManager::getCurUserLogin() const
+{
+    if (login_stack.empty())
+    {
+        return(login_user());
+    }
+    else return login_stack.top();
+}
 bool UserManager::isLoggedIn(const std::string& id)
 {
     if (id.empty()) return false;
@@ -316,4 +317,8 @@ bool UserManager::isLoggedIn(const std::string& id)
     std::vector<UserInfo> infos = user_storage.find(uid);
     if (infos.empty()) return false;
     return infos[0].is_logged;
+}
+void UserManager::Fixselected_book(const std::string& sb)
+{
+    login_stack.top().selected_book = MakeArray(sb);
 }

@@ -16,17 +16,12 @@ struct BookInfo
     MakeArray keywords;
     double price;
     int quantity;
-    BookInfo() : price(0.0), quantity(0) {}
+    BookInfo() : isbn(MakeArray("")),name(MakeArray("")),author(MakeArray("")),keywords(MakeArray("")),price(0.0), quantity(0) {}
     BookInfo(const std::string& isbn,const std::string& name,const std::string& author,const std::string& keywords,double price,int quantity):
     isbn(isbn),name(name),author(author),keywords(keywords),price(price),quantity(quantity) {}
     bool operator<(const BookInfo& other) const
     {
-        if (isbn != other.isbn) return (isbn < other.isbn);
-        if (name != other.name) return (name < other.name);
-        if (author != other.author) return (author < other.author);
-        if (keywords != other.keywords) return (keywords < other.keywords);
-        if (price != other.price) return (price < other.price);
-        return (quantity < other.quantity);
+         return (isbn < other.isbn);
     }
     bool operator==(const BookInfo& other) const
     {
@@ -34,12 +29,7 @@ struct BookInfo
     }
     bool operator>(const BookInfo& other) const
     {
-        if (isbn != other.isbn) return (isbn > other.isbn);
-        if (name != other.name) return (name > other.name);
-        if (author != other.author) return (author > other.author);
-        if (keywords != other.keywords) return (keywords > other.keywords);
-        if (price != other.price) return (price > other.price);
-        return (quantity > other.quantity);
+         return (isbn > other.isbn);
     }
     bool operator<=(const BookInfo& other) const
     {
@@ -108,12 +98,13 @@ private:
 
 public:
     BookManager():book_storage("books.dat"),name_find("name.data"),author_find("author.data"),keywords_find("keywords.data"),
-    trade_storage("trades.dat"),cur_privilege(0),cur_operator(MakeArray("")),trade_id_count(0)
+    trade_storage("trades.dat"),selected_book(MakeArray("")),cur_privilege(0),cur_operator(MakeArray("")),trade_id_count(0)
     {
         initTradeCounter();
     }
-    void setCurOperator(const std::string& id,int priv)
+    void setCurOperator(const std::string& sb,const std::string& id,int priv)
     {
+        selected_book = MakeArray(sb);
         cur_privilege = priv;
         cur_operator = MakeArray(id);
     }

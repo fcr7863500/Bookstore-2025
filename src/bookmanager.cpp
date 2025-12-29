@@ -60,7 +60,7 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 Tool::printInvalid();
                 return false;
             }
-            std::vector<MakeArray> isbn_col = name_find.find(name_val);
+            std::vector<MakeArray> isbn_col = name_find.find(MakeArray(name_val));
             for (int i = 0;i < isbn_col.size();i++)
             {
                 std::vector<BookInfo> part = book_storage.find(isbn_col[i]);
@@ -79,7 +79,7 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 Tool::printInvalid();
                 return false;
             }
-            std::vector<MakeArray> isbn_col = author_find.find(author_val);
+            std::vector<MakeArray> isbn_col = author_find.find(MakeArray(author_val));
             for (int i = 0;i < isbn_col.size();i++)
             {
                 std::vector<BookInfo> part = book_storage.find(isbn_col[i]);
@@ -98,7 +98,7 @@ bool BookManager::show(const std::string& type,const std::string& value)
                 return false;
             }
             std::vector<std::string> cmd = Tool::split(keyword_val,'|');
-            if (cmd.size() > 1)
+            if (cmd.size() != 1)
             {
                 Tool::printInvalid();
                 return false;
@@ -159,10 +159,10 @@ bool BookManager::buy(const std::string& isbn,int quantity)
         Tool::printInvalid();
         return false;
     }
+    book_storage.erase(isbn_key,book);
     double total = book.price * quantity;
     std::cout << Tool::TwoDouble(total) << '\n';
     book.quantity -= quantity;
-    book_storage.erase(isbn_key,book);
     book_storage.insert(isbn_key,book);
     TradeRecord trade(isbn,-quantity,total,cur_operator.toString(),trade_id_count++);
     trade_storage.insert(isbn_key,trade);
@@ -183,11 +183,11 @@ bool BookManager::select(const std::string& isbn)
         BookInfo new_book;
         new_book.isbn = isbn_key; new_book.quantity = 0;new_book.price = 0.0; new_book.author = "";new_book.keywords = "";new_book.name = "";
         book_storage.insert(isbn_key,new_book);
+        name_find.insert(MakeArray(""),isbn_key);
+        author_find.insert(MakeArray(""),isbn_key);
+        keywords_find.insert(MakeArray(""),isbn_key);
     }
     selected_book = isbn_key;
-    name_find.insert(MakeArray(""),isbn_key);
-    author_find.insert(MakeArray(""),isbn_key);
-    keywords_find.insert(MakeArray(""),isbn_key);
     return true;
 }
 //修改图书信息的函数实现
@@ -340,8 +340,8 @@ bool BookManager::import(int quantity,double total_cost)
         return false;
     }
     BookInfo& book = target_books[0];
-    book.quantity += quantity;
     book_storage.erase(isbn_key,book);
+    book.quantity += quantity;
     book_storage.insert(isbn_key,book);
     TradeRecord trade(isbn_key.toString(),quantity,-total_cost,cur_operator.toString(),trade_id_count++);
     trade_storage.insert(isbn_key,trade);

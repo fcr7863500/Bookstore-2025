@@ -108,6 +108,7 @@ public:
     {
         out_val = 0;
         if (str.empty() || str.size() > 10) return false;
+        if (str[0] == 0 && str[1] == 0) return false;
         for (char c : str)
         {
             if (!isdigit(c)) return false;
@@ -121,6 +122,7 @@ public:
     {
         out_val = 0.0;
         if (str.empty() || str.size() > 13) return false;
+        if (str[0] == 0 && str[1] == 0) return false;
         int dot_cnt = 0;
         for (char c : str)
         {

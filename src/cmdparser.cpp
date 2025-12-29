@@ -33,7 +33,7 @@ bool CommandParser::parseSu(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(user_id,"su",user_id);
-        book_manager.setCurOperator(user_id,user_manager.getUserPrivilege());
+        book_manager.setCurOperator("",user_id,user_manager.getUserPrivilege());
         book_manager.getSelectBook() = "";
     }
     return result;
@@ -50,7 +50,7 @@ bool CommandParser::parseLogout(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(cur_user,"logout",cur_user);
-        book_manager.setCurOperator(user_manager.getCurUser(),user_manager.getUserPrivilege());
+        book_manager.setCurOperator(user_manager.getCurUserLogin().selected_book.toString(),user_manager.getCurUser(),user_manager.getUserPrivilege());
     }
     return result;
 }
@@ -203,6 +203,7 @@ bool CommandParser::parseSelect(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(user_manager.getCurUser(),"select",isbn);
+        user_manager.Fixselected_book(isbn);
     }
     return result;
 }
@@ -247,6 +248,8 @@ bool CommandParser::parseModify(const std::vector<std::string>& cmds)
     if (result)
     {
         log_manager.logOperation(user_manager.getCurUser(),"modify",book_manager.getSelectBook());
+        std::string new_isbn = book_manager.getSelectBook();
+        user_manager.Fixselected_book(new_isbn);
     }
     return result;
 }

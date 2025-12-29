@@ -24,16 +24,24 @@ struct UserInfo
     bool operator<=(const UserInfo& other) const;
     bool operator>=(const UserInfo& other) const;
 };
+struct login_user
+{
+    MakeArray userid;
+    int privilege;
+    MakeArray selected_book;
+    login_user() : userid(MakeArray("")),privilege(0),selected_book(MakeArray("")){};
+    login_user(const std::string& us,int priv,const std::string& sb):userid(MakeArray(us)),privilege(priv),selected_book(MakeArray(sb)){}
+};
 class UserManager
 {
 private:
     LinkedBlock<MakeArray,UserInfo> user_storage;
-    std::stack<MakeArray> login_stack;
+    std::stack<login_user> login_stack;
     MakeArray cur_user;
     int cur_privilege;
     void Initial_Root_user();
 public:
-    UserManager() : user_storage("users.dat"),cur_privilege(0)
+    UserManager() : user_storage("users.dat"),cur_privilege(0),cur_user(MakeArray(""))
     {
         // std::cerr << "construct user manager" << std::endl;
         Initial_Root_user();
@@ -47,6 +55,8 @@ public:
     bool deleteUser(const std::string& id);
     int getUserPrivilege() const;
     std::string getCurUser() const;
+    login_user getCurUserLogin() const;
     bool isLoggedIn(const std::string& id);
+    void Fixselected_book(const std::string& sb);
 };
 #endif //BOOKSTORE_2025_USERMANAGER_H
