@@ -397,7 +397,7 @@ std::vector<V> LinkedBlock<K,V>::find(const K &index)
         {
             Block block = readBlock(cur_offset);
             block.collectValues(index, values);
-            std::cerr << values.size() << std::endl;
+            //std::cerr << values.size() << std::endl;
         }
         cur_offset = next;
     }

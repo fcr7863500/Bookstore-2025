@@ -1,7 +1,6 @@
 #include"../include/bookmanager.h"
 #include<iostream>
 #include<algorithm>
-#include<ctime>
 
 void BookManager::initTradeCounter()
 {
@@ -140,7 +139,7 @@ bool BookManager::buy(const std::string& isbn,int quantity)
 {
     if (cur_privilege < 1 || quantity <= 0 || !Tool::isValidISBN(isbn) || isbn.empty())
     {
-        std::cerr << "bad cons" << std::endl;
+        //std::cerr << "bad cons" << std::endl;
         Tool::printInvalid();
         return false;
     }
@@ -148,14 +147,14 @@ bool BookManager::buy(const std::string& isbn,int quantity)
     std::vector<BookInfo> target_books = book_storage.find(isbn_key);
     if (target_books.empty())
     {
-        std::cerr << "not found" << std::endl;
+        //std::cerr << "not found" << std::endl;
         Tool::printInvalid();
         return false;
     }
     BookInfo& book = target_books[0];
     if (book.quantity < quantity)
     {
-        std::cerr << "not enough" << std::endl;
+        //std::cerr << "not enough" << std::endl;
         Tool::printInvalid();
         return false;
     }

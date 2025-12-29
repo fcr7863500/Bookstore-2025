@@ -97,7 +97,7 @@ bool CommandParser::parseUseradd(const std::vector<std::string>& cmds)
     }
     std::string user_id = cmds[1];
     std::string pwd = cmds[2];
-    int priv = atoi(cmds[3].c_str());
+    int priv = std::stoi(cmds[3]);
     std::string uname = cmds[4];
     bool result = user_manager.useradd(user_id,pwd,priv, uname);
     if (result)
@@ -209,6 +209,7 @@ bool CommandParser::parseSelect(const std::vector<std::string>& cmds)
 }
 bool CommandParser::parseModify(const std::vector<std::string>& cmds)
 {
+    std::string old = book_manager.getSelectBook();
     if (cmds.size() < 2)
     {
         Tool::printInvalid();
@@ -285,6 +286,28 @@ bool CommandParser::parseModify(const std::vector<std::string>& cmds)
         log_manager.logOperation(user_manager.getCurUser(),"modify",book_manager.getSelectBook());
         std::string new_isbn = book_manager.getSelectBook();
         user_manager.Fixselected_book(new_isbn);
+        if (new_isbn != old)
+        {
+            std::stack<login_user> tmp_stack;
+            std::stack<login_user> now_stack = user_manager.get_user_stack();
+            while (!now_stack.empty())
+            {
+                login_user now_user = now_stack.top();
+                now_stack.pop();
+                if (now_user.selected_book != new_isbn)
+                {
+                    now_user.selected_book = new_isbn;
+                }
+                tmp_stack.push(now_user);
+            }
+            while (!tmp_stack.empty())
+            {
+                login_user now_user = tmp_stack.top();
+                tmp_stack.pop();
+                now_stack.push(now_user);
+            }
+            user_manager.set_user_stack(now_stack);
+        }
     }
     return result;
 }
@@ -326,7 +349,7 @@ bool CommandParser::parseShowfinance(const std::vector<std::string>& cmds)
             return false;
         }
     }
-    std::cerr << "sf count: " << count << std::endl;
+    //std::cerr << "sf count: " << count << std::endl;
     bool result = log_manager.Showfinance(count);
     if (result)
     {

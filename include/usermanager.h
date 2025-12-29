@@ -59,5 +59,7 @@ public:
     login_user getCurUserLogin() const;
     bool isLoggedIn(const std::string& id);
     void Fixselected_book(const std::string& sb);
+    std::stack<login_user> get_user_stack();
+    void set_user_stack(std::stack<login_user> stack);
 };
 #endif //BOOKSTORE_2025_USERMANAGER_H

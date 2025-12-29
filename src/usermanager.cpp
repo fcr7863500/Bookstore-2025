@@ -44,27 +44,26 @@ bool UserInfo::operator>=(const UserInfo& other) const
         UserInfo root{"root","sjtu","root",7};
         root.is_logged = false;
         user_storage.insert(root_id,root);
-        std::cerr << user_storage.find(root_id).size() << std::endl;
+        //std::cerr << user_storage.find(root_id).size() << std::endl;
     }
 }
 //有个小问题，如果该用户已经进入登录栈，重复登录效果是什么样
 bool UserManager::su(const std::string& id,const std::string& password)
 {
-    auto vec = user_storage.getAll();
-    for (auto i : vec)
-    {
-        std::cerr << "user: ";
-        std::cerr << i.username.toString() << std::endl;
-    }
+    //auto vec = user_storage.getAll();
+   // for (auto i : vec)
+    //{
+//        std::cerr << i.username.toString() << std::endl;
+    //}
     if (id.empty())
     {
-        std::cerr << "empty id" << std::endl;
+        //std::cerr << "empty id" << std::endl;
         Tool::printInvalid();
         return false;
     }
     if (!Tool::isValidUserID(id))
     {
-        std::cerr << "invalid id" << std::endl;
+        //std::cerr << "invalid id" << std::endl;
         Tool::printInvalid();
         return false;
     }
@@ -72,7 +71,7 @@ bool UserManager::su(const std::string& id,const std::string& password)
     std::vector<UserInfo> infos = user_storage.find(uid);
     if (infos.empty())
     {
-        std::cerr << "empty info" << std::endl;
+        //std::cerr << "empty info" << std::endl;
         Tool::printInvalid();
         return false;
     }
@@ -96,7 +95,7 @@ bool UserManager::su(const std::string& id,const std::string& password)
         user_storage.insert(uid,user);
         return true;
     }
-    std::cerr << user.password.toString() << std::endl;
+    //std::cerr << user.password.toString() << std::endl;
     if (password.empty() || !Tool::isValidPassword(password) || user.password != MakeArray(password))
     {
         Tool::printInvalid();
@@ -321,4 +320,12 @@ bool UserManager::isLoggedIn(const std::string& id)
 void UserManager::Fixselected_book(const std::string& sb)
 {
     login_stack.top().selected_book = MakeArray(sb);
+}
+std::stack<login_user> UserManager::get_user_stack()
+{
+    return login_stack;
+}
+void UserManager::UserManager::set_user_stack(std::stack<login_user> stack)
+{
+    login_stack = stack;
 }
