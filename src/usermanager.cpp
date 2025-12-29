@@ -2,7 +2,7 @@
 //构造userinfo
 UserInfo::UserInfo() :userid(MakeArray("")),password(MakeArray("")),username(MakeArray("")), privilege(0),is_logged(false){}
 
-UserInfo::UserInfo(const std::string& pw,const std::string& us,int priv):
+UserInfo::UserInfo(const std::string& ud,const std::string& pw,const std::string& us,int priv):userid(MakeArray(ud)),
 password(MakeArray(pw)),username(MakeArray(us)),privilege(priv),is_logged(false){}
 
 bool UserInfo::operator<(const UserInfo& other) const
@@ -41,7 +41,7 @@ bool UserInfo::operator>=(const UserInfo& other) const
     std::vector<UserInfo> root_info = user_storage.find(root_id);
     if (root_info.empty())
     {
-        UserInfo root{"sjtu","root",7};
+        UserInfo root{"root","sjtu","root",7};
         root.is_logged = false;
         user_storage.insert(root_id,root);
         std::cerr << user_storage.find(root_id).size() << std::endl;
@@ -179,7 +179,7 @@ bool UserManager::registerUser(const std::string& id,const std::string& password
         Tool::printInvalid();
         return false;
     }
-    UserInfo new_user(password,name,1);
+    UserInfo new_user(id,password,name,1);
     new_user.is_logged = false;
     user_storage.insert(uid,new_user);
     return true;
@@ -261,7 +261,7 @@ bool UserManager::useradd(const std::string& id,const std::string& pw,int priv,c
         Tool::printInvalid();
         return false;
     }
-    UserInfo new_user(pw,name,priv);
+    UserInfo new_user(id,pw,name,priv);
     new_user.is_logged = false;
     user_storage.insert(uid,new_user);
     return true;

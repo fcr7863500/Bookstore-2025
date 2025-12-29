@@ -17,7 +17,7 @@ struct UserInfo
     bool is_logged;
 
     UserInfo();
-    UserInfo(const std::string& pw,const std::string& us,int priv);
+    UserInfo(const std::string& ud,const std::string& pw,const std::string& us,int priv);
     bool operator<(const UserInfo& other) const;
     bool operator==(const UserInfo& other) const;
     bool operator>(const UserInfo& other) const;
