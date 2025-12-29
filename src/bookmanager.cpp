@@ -128,8 +128,8 @@ bool BookManager::show(const std::string& type,const std::string& value)
     {
         for (auto &book : target_books)
         {
-            std::cerr << "isbn: " << book.isbn.toString() << '\n';
-            std::cerr << "name: " << book.name.toString() << '\n';
+           // std::cerr << "isbn: " << book.isbn.toString() << '\n';
+            //std::cerr << "name: " << book.name.toString() << '\n';
             std::cout << book.isbn.toString() << '\t' << book.name.toString() << '\t' << book.author.toString() << '\t' << book.keywords.toString() << '\t' << Tool::TwoDouble(book.price) << '\t' << book.quantity << '\n';
         }
     }
@@ -375,4 +375,8 @@ std::vector<TradeRecord> BookManager::showAll()
 std::string BookManager::getSelectBook()
 {
     return selected_book.toString();
+}
+void BookManager::setSelectBook(MakeArray new_book)
+{
+    selected_book = new_book;
 }

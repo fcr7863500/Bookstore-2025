@@ -1,5 +1,6 @@
 #include"../include/cmdparser.h"
 #include<iostream>
+#include<set>
 //基础指令
 bool CommandParser::parseQuit(const std::vector<std::string>& cmds)
 {
@@ -34,7 +35,6 @@ bool CommandParser::parseSu(const std::vector<std::string>& cmds)
     {
         log_manager.logOperation(user_id,"su",user_id);
         book_manager.setCurOperator("",user_id,user_manager.getUserPrivilege());
-        book_manager.getSelectBook() = "";
     }
     return result;
 }
@@ -215,28 +215,63 @@ bool CommandParser::parseModify(const std::vector<std::string>& cmds)
         return false;
     }
     std::map<const std::string, std::string> modify_cmd;
-    for (int i = 1; i < cmds.size(); i++)
+    bool judge[5];
+    for (int i = 0; i < 5; i++)
+    {
+        judge[i] = false;
+    }
+    for (int i = 1; i < (int)cmds.size(); i++)
     {
         std::string part = cmds[i];
         if (part.substr(0,6) == "-ISBN=")
         {
+            if (judge[0] == true)
+            {
+                Tool::printInvalid();
+                return false;
+            }
             modify_cmd["ISBN"] = part.substr(6);
+            judge[0] = true;
         }
         else if (part.substr(0,6) == "-name=")
         {
+            if (judge[1] == true)
+            {
+                Tool::printInvalid();
+                return false;
+            }
             modify_cmd["name"] = part.substr(6);
+            judge[1] = true;
         }
         else if (part.substr(0,8) == "-author=")
         {
+            if (judge[2] == true)
+            {
+                Tool::printInvalid();
+                return false;
+            }
             modify_cmd["author"] = part.substr(8);
+            judge[2] = true;
         }
         else if (part.substr(0,9) == "-keyword=")
         {
+            if (judge[3] == true)
+            {
+                Tool::printInvalid();
+                return false;
+            }
             modify_cmd["keyword"] = part.substr(9);
+            judge[3] = true;
         }
         else if (part.substr(0,7) == "-price=")
         {
+            if (judge[4] == true)
+            {
+                Tool::printInvalid();
+                return false;
+            }
             modify_cmd["price"] = part.substr(7);
+            judge[4] = true;
         }
         else
         {

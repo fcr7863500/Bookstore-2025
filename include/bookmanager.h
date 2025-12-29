@@ -116,5 +116,6 @@ public:
     std::vector<TradeRecord> showFinance(int count = -1);
     std::vector<TradeRecord> showAll();
     std::string getSelectBook();
+    void setSelectBook(MakeArray book);
 };
 #endif //BOOKSTORE_2025_BOOKMANAGER_H
